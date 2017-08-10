@@ -2,7 +2,10 @@ import requests, urllib
 from textblob import TextBlob
 from textblob.sentiments import NaiveBayesAnalyzer
 
-APP_ACCESS_TOKEN = '1576928281.afbfeae.b67895a9168648ab8d4d11f2c4781ace'
+# Using matplotlib library to plot no of images with popular hashtags
+import matplotlib.pyplot as plt
+
+APP_ACCESS_TOKEN = '1576928281.197201a.48446bea3705426ab6d461f108f821e7'
 
 
 BASE_URL = 'https://api.instagram.com/v1/'
@@ -257,6 +260,79 @@ def delete_negative_comment(insta_username):
         print 'Status code other than 200 received!'
 
 
+def popular_hashtag():
+    # ********************************* FOR FASHION HASHTAGS **************************************************
+    tag_name1 = raw_input("Choose from the category fashionj<>repost,sports,fashion,pop,cultura,photography<>:- ")
+    request_url = (BASE_URL + 'tags/' + tag_name1 + '?access_token=%s') % (APP_ACCESS_TOKEN)
+    print 'GET request url : %s' % (request_url)
+    popular_hash_tag = requests.get(request_url).json()
+    if popular_hash_tag['meta']['code'] == 200:
+        if len(popular_hash_tag['data']):
+            media_count1 = popular_hash_tag["data"]["media_count"]
+            print "MEDIA COUNT = " + str(media_count1)  # To Return the media count
+        else:
+            return None
+    else:
+        print 'Status code other than 200 received!'
+
+    # ********************************************** FOR BLOGGER HASHTAGS ********************************************
+    tag_name2 = raw_input("Choose from the category blogger<>happy,love ,blogger ,hairstyle ,tumblr ,tumblrgirl<>:- ")
+    request_url = (BASE_URL + 'tags/' + tag_name2 + '?access_token=%s') % (APP_ACCESS_TOKEN)
+    print 'GET request url : %s' % (request_url)
+    popular_hash_tag = requests.get(request_url).json()
+    if popular_hash_tag['meta']['code'] == 200:
+        if len(popular_hash_tag['data']):
+            media_count2 = popular_hash_tag["data"]["media_count"]
+            print "MEDIA COUNT=" + str(media_count2)  # To Return the media count
+        else:
+            return None
+    else:
+        print 'Status code other than 200 received!'
+
+    # ******************************************* FOR FOOD HASHTAGS *****************************************
+    tag_name3 = raw_input("Choose from the category food<>foodlove ,chocolate, instafood, foodporn<>:- ")
+    request_url = (BASE_URL + 'tags/' + tag_name3 + '?access_token=%s') % (APP_ACCESS_TOKEN)
+    print 'GET request url : %s' % (request_url)
+    popular_hash_tag = requests.get(request_url).json()
+    if popular_hash_tag['meta']['code'] == 200:
+        if len(popular_hash_tag['data']):
+            media_count3 = popular_hash_tag["data"]["media_count"]
+            print "MEDIA COUNT =" + str(media_count3)  # To Return the media count
+        else:
+            return None
+    else:
+        print 'Status code other than 200 received!'
+
+    # **************************************************** FOR TRAVEL HASHTAGS ******************************************
+    tag_name4 = raw_input("Choose from the category travel<>travel ,instatravel ,travelgram ,tourism ,instago,travelblogger ,wanderlust<>:- ")
+    request_url = (BASE_URL + 'tags/' + tag_name4 + '?access_token=%s') % (APP_ACCESS_TOKEN)
+    print 'GET request url : %s' % (request_url)
+    popular_hash_tag = requests.get(request_url).json()
+    if popular_hash_tag['meta']['code'] == 200:
+        if len(popular_hash_tag['data']):
+            media_count4 = popular_hash_tag["data"]["media_count"]
+            print "MEDIA COUNT" + str(media_count4)  # To Return the media count
+        else:
+            return None
+    else:
+        print 'Status code other than 200 received!'
+    print '~~~~~~~~~~~~The pie-chart will be plotted on the basis of hashtags you chose for the categories~~~~~~~~~'
+    print '<>~~~~~~~~~~~~~~~~~~~~~~~~The pie-chart is being plot with perfect counts~~~~~~~~~~~~~~~~~~~~~~~~~~~<>'
+    print '~~~~~~@@~~~~~~~~@@@~~~~~~~~~~~~~@@@@@~~~~~~~~~~~~~~~~~~~~~~~@@@@@@@@@~~~~~~~~~~~~~~~~~~~~~~~~@@@@@@@@@@@@@@@'
+    # Data to 0plot
+    labels = 'Fahion'+"("+"#"+tag_name1+")", 'Blogger'+"("+"#"+tag_name2+")", 'Food'+"("+"#"+tag_name3+")", 'Travel'+"("+"#"+tag_name4+")"
+    sizes = [media_count1, media_count2, media_count3, media_count4]
+    colors = ['gold', 'yellowgreen', 'lightcoral', 'lightskyblue']
+    explode = (0.1, 0, 0, 0)  # explode 1st slice
+
+    # Plot
+    plt.pie(sizes, explode=explode, labels=labels, colors=colors,
+            autopct='%1.1f%%', shadow=True, startangle=140)
+
+    plt.axis('equal')
+    return plt.show()
+
+
 def start_bot():
     while True:
         print '\n'
@@ -271,35 +347,48 @@ def start_bot():
         print "g.Get a list of comments on the recent post of a user\n"
         print "h.Make a comment on the recent post of a user\n"
         print "i.Delete negative comments from the recent post of a user\n"
-        print "j.Exit"
+        print "j.To determine images shared with a particular hash tag and plot using matplotlib"
+        print "k.Exit"
 
         choice = raw_input("Enter you choice: ")
         if choice == "a":
             self_info()
+
         elif choice == "b":
             insta_username = raw_input("Enter the username of the user: ")
             get_user_info(insta_username)
+
         elif choice == "c":
             get_own_post()
+
         elif choice == "d":
             insta_username = raw_input("Enter the username of the user: ")
             get_user_post(insta_username)
-        elif choice=="e":
+
+        elif choice == "e":
            insta_username = raw_input("Enter the username of the user: ")
            get_like_list(insta_username)
-        elif choice=="f":
+
+        elif choice == "f":
            insta_username = raw_input("Enter the username of the user: ")
            like_a_post(insta_username)
-        elif choice=="g":
+
+        elif choice == "g":
            insta_username = raw_input("Enter the username of the user: ")
            get_comment_list(insta_username)
-        elif choice=="h":
+
+        elif choice == "h":
            insta_username = raw_input("Enter the username of the user: ")
            post_a_comment(insta_username)
-        elif choice=="i":
+
+        elif choice == "i":
            insta_username = raw_input("Enter the username of the user: ")
            delete_negative_comment(insta_username)
+
         elif choice == "j":
+            popular_hashtag()
+
+        elif choice == "k":
             exit()
         else:
             print "wrong choice"
